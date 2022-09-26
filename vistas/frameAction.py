@@ -1,5 +1,8 @@
-from tkinter import ttk, Frame, messagebox
+from tkinter import ttk, Frame, messagebox, filedialog
+from tktooltip import ToolTip
 from misc.perfiles import setComando, teclaConComando
+from os import path
+from funciones.teclas.teclado import grabarMacro
 
 acciones = ["Macro", "Escritura", "Sonido"]
 
@@ -23,7 +26,7 @@ class FActions(Frame):
 
     def setPerfil(self, perfil):
         self.perfil = perfil
-        self.lPerfil.config(text="Perfil: {}".format(self.perfil))
+        self.lPerfil.config(text="Perfil: {}".format(self.perfil), justify='right')
     def setBtn(self, tecla):
         self.tecla = tecla
         self.lTecla.config(text="Tecla: {}".format(self.tecla))
@@ -37,26 +40,32 @@ class FActions(Frame):
                 
                 if (accion == "Escritura"):
                     self.fAccion = fAccionEscritura(self)
-                    self.fAccion.pack()
+                    # self.fAccion.pack()
+                    self.fAccion.place(x=30, y=110, width=320, height=190)
                     self.accionSelec = accion
                 elif (accion == "Macro"):
                     self.fAccion = fAccionMacro(self)
-                    self.fAccion.pack()
+                    # self.fAccion.pack()
+                    self.fAccion.place(x=30, y=110, width=320, height=190)
                     self.accionSelec = accion
                 elif (accion == 'Sonido'):
                     self.fAccion = fAccionSonido(self)
-                    self.fAccion.pack()
+                    # self.fAccion.pack()
+                    self.fAccion.place(x=30, y=110, width=320, height=190)
                     self.accionSelec = accion
 
 
     def crearVentana(self):
         self.lPerfil = ttk.Label(self, text="Perfil: {}".format(self.perfil))
-        self.lPerfil.pack()
+        # self.lPerfil.pack()
+        self.lPerfil.place(x=50,y=20,width=140)
         self.lTecla = ttk.Label(self, text="Tecla: {}".format(self.tecla))
-        self.lTecla.pack()
+        # self.lTecla.pack()
+        self.lTecla.place(x=160,y=20,width=140)
 
         self.cbAcciones = ttk.Combobox(self, state='readonly', values=acciones)
-        self.cbAcciones.pack()
+        # self.cbAcciones.pack()
+        self.cbAcciones.place(x=120, y=60, width=140, height=30)
         # self.cbAcciones.bind("<<ComboboxSelected>>", self.cambioDeAccion())
         
 class fAccionEscritura(Frame):
@@ -110,6 +119,7 @@ class fAccionMacro(Frame):
         self.tecla  = master.tecla
         self.perfil = master.perfil
         self.accion = "macro"
+        self.macro  = None
 
         self.crearVentana()
 
@@ -132,15 +142,23 @@ class fAccionMacro(Frame):
             if respuesta==True:
                 setComando(self.perfil, accion, True)
 
-        self.eTexto.config(textvariable="")
+        self.eTexto.config(text="")
+
+    def grabarMacro(self):
+        
+        self.macro = grabarMacro()
+
+        self.eTexto.config(text=self.macro)
 
     def crearVentana(self):
         
         lAccion = ttk.Label(self, justify="center")
         lAccion.config(text="Ingrese la macro:")
         lAccion.pack()
-        self.eTexto = ttk.Entry(self)
+        self.eTexto = ttk.Label(self, justify="center")
         self.eTexto.pack()
+        self.bGuardar = ttk.Button(self, text="Grabar Macro", command=self.grabarMacro)
+        self.bGuardar.pack()
 
         self.bGuardar = ttk.Button(self, text="Guardar", command=self.guardarAccion)
         self.bGuardar.pack()
@@ -153,6 +171,7 @@ class fAccionSonido(Frame):
         self.tecla  = master.tecla
         self.perfil = master.perfil
         self.accion = "sonido"
+        self.archivo = None
 
         self.crearVentana()
 
@@ -166,7 +185,7 @@ class fAccionSonido(Frame):
         # accion = '"tecla":"{0}","comando":"{1}","parametro":"{2}"'.format(self.tecla, self.accion, self.eTexto.get())
         accion["tecla"] = self.tecla
         accion["comando"] = self.accion
-        accion["parametro"] = self.eTexto.get()
+        accion["parametro"] = self.archivo
 
         if not teclaConComando:
             setComando(self.perfil, accion, False)
@@ -177,14 +196,26 @@ class fAccionSonido(Frame):
 
         self.eTexto.config(textvariable="")
 
+    def buscarArchivo(self):
+        filetypes = [("MP3", "*.mp3")]
+        self.archivo = filedialog.askopenfilename(initialdir='/', title='Seleccione un archivo de audio',filetypes = filetypes)
+        nomArchivo = path.split(self.archivo)
+        print(self.archivo)
+        print(nomArchivo[1])
+        self.eTexto.config(text=nomArchivo[1])
+        tooltip = self.archivo
+        ToolTip(self.eTexto, msg=tooltip, delay=1.0)
+
 
     def crearVentana(self):
         
         lAccion = ttk.Label(self, justify="center")
         lAccion.config(text="Seleccione el archivo de audio:")
         lAccion.pack()
-        self.eTexto = ttk.Entry(self)
+        self.eTexto = ttk.Label(self, justify="center")
         self.eTexto.pack()
+        bSelArch = ttk.Button(self, text="Buscar Archivo", command=self.buscarArchivo)
+        bSelArch.pack()
 
         self.bGuardar = ttk.Button(self, text="Guardar", command=self.guardarAccion)
         self.bGuardar.pack()

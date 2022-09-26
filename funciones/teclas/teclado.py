@@ -8,8 +8,7 @@ def ejecutarMacro(macro):
     else:
         print("no se registro una macro para esta tecla")
 
-def grabarMacro(indexMacro):
-
+def grabarMacro():
     print("Presiona la macro")
     macro = keyboard.read_hotkey()
     # macros[indexMacro] = macro

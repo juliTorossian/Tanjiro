@@ -21,7 +21,7 @@ class PreguntarNombre(ttk.Frame):
         if input != '':
             # print(input)
             self.value = input
-            self.ventana.destroy()
+            # self.ventana.destroy()
     def btnCancel(self):
         self.ventana.destroy()
 
