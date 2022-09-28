@@ -64,8 +64,60 @@ def teclaConComando(perfil, tecla):
         for c in comandos:
             if tecla == c['tecla']:
                 tieneComando = True
+                exit
 
     return tieneComando
+
+def getComando(perfil, tecla):
+    comando, param = None, None
+
+    with open(path, 'r') as file:
+        perfiles = json.load(file)
+
+    if perfil in perfiles:
+        comandos = perfiles[perfil]
+        for c in comandos:
+            if tecla == c['tecla']:
+                comando = c['comando']
+                param = c['parametro']
+
+    return comando, param
+
+def setPerfil(perfilNombre):
+    ok = False
+    perfilesExistentes = getPerfilesNombre()
+
+    if not perfilNombre in perfilesExistentes:
+        with open(path, 'r') as file:
+            perfiles = json.load(file)
+
+        perfiles[perfilNombre] = []
+
+        with open(path, "w") as file:
+            json.dump(perfiles, file)
+
+        ok = True
+
+    return ok
+
+def delPerfil(perfilNombre):
+    ok = False
+    perfilesExistentes = getPerfilesNombre()
+
+    if perfilNombre in perfilesExistentes:
+        with open(path, 'r') as file:
+            perfiles = json.load(file)
+
+        del perfiles[perfilNombre]
+
+        with open(path, "w") as file:
+            json.dump(perfiles, file)
+
+        ok = True
+
+    return ok
+
+
 
 # print(getPerfilesNombre())
 # print(getComandosPerfil('PERFIL1'))
