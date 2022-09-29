@@ -1,57 +1,78 @@
-import tkinter as tk
-from tkinter import Tk, messagebox, ttk, Frame
-from funciones.teclas.teclado import grabarMacro, ejecutarMacro
+from tkinter import Tk
 from vistas.frameConn import FConn
 from vistas.framePerfiles import FPerfiles
 from vistas.frameBotones import FBotones
 from vistas.frameAction import FActions
+from misc.perfiles import getComando
 
-root = Tk()
-root.geometry("800x530")
-root.resizable(False,False)
+class VentanaMain():
+    
+    def __init__(self) -> None:
+        self.ventana = Tk()
+        self.ventana.resizable(False,False)
+        window_width = 800
+        window_height = 530
+        screen_width = self.ventana.winfo_screenwidth()
+        screen_height = self.ventana.winfo_screenheight()
+        center_x = int(screen_width/2 - window_width / 2)
+        center_y = int(screen_height/2 - window_height / 2)
 
-perfilActivo = None
+        self.ventana.geometry(f'{window_width}x{window_height}+{center_x}+{center_y}')
 
-# Frame de conneccion
-frameConn = FConn(root)
-frameConn.place(x=0,y=0,width=800,height=60)
-frameConn.config(background="lightblue")
+        self.perfilActivo = None
 
-# Frame de perfiles
-framePerf = FPerfiles(root)
-framePerf.place(x=17, y=110,width=380, height=90)
-framePerf.config(bg="lightblue")
+        self.crearVentanas()
+        self.bindeos()
 
-# Frame de botones
-frameBtn = FBotones(root)
-frameBtn.place(x=17, y=210,width=380, height=300)
-frameBtn.config(bg="lightblue")
+    def crearVentanas(self):
+        # Frame de conneccion
+        self.frameConn = FConn(self.ventana)
+        self.frameConn.place(x=0,y=0,width=800,height=60)
+        self.frameConn.config(background="lightblue")
 
-# Frame de acciones
-frameAct = FActions(root)
-frameAct.place(x=400, y=110,width=380, height=400)
-frameAct.config(bg="lightblue")
+        # Frame de perfiles
+        self.framePerf = FPerfiles(self.ventana)
+        self.framePerf.place(x=17, y=110,width=380, height=90)
+        self.framePerf.config(bg="lightblue")
 
+        # Frame de botones
+        self.frameBtn = FBotones(self.ventana)
+        self.frameBtn.place(x=17, y=210,width=380, height=300)
+        self.frameBtn.config(bg="lightblue")
 
-def cambioDePerfil(event):
-    perfilActivo = framePerf.cbPerf.get()
-    frameBtn.setBotones(perfilActivo)
-    frameAct.setPerfil(perfilActivo)
-    # print(perfilActivo)
-
-def cambioDeTecla(event):
-    teclaActiva = frameBtn.teclaActiva
-    frameAct.setBtn(teclaActiva)
-    # print(teclaActiva)
-
-def cambioDeAccion(event):
-    accionSel = frameAct.cbAcciones.get()
-    frameAct.setAccion(accionSel)
-    # print(accionSel)
-
-framePerf.cbPerf.bind("<<ComboboxSelected>>", cambioDePerfil)
-frameBtn.lTeclaActiva.bind("<Configure>", cambioDeTecla)
-frameAct.cbAcciones.bind("<<ComboboxSelected>>", cambioDeAccion)
+        # Frame de acciones
+        self.frameAct = FActions(self.ventana)
+        self.frameAct.place(x=400, y=110,width=380, height=400)
+        self.frameAct.config(bg="lightblue")
 
 
-root.mainloop()
+    def cambioDePerfil(self, event):
+        self.perfilActivo = self.framePerf.cbPerf.get()
+        self.frameBtn.setBotones(self.perfilActivo)
+        self.frameAct.setPerfil(self.perfilActivo)
+        # print(perfilActivo)
+
+    def cambioDeTecla(self, event):
+        self.teclaActiva = self.frameBtn.teclaActiva
+        self.frameAct.setBtn(self.teclaActiva)
+
+        comando, param = getComando(self.perfilActivo, self.teclaActiva)
+
+        self.frameAct.setAccParam(param)
+        self.frameAct.setAccion(comando)
+
+        # print(teclaActiva)
+
+    def cambioDeAccion(self, event):
+        accionSel = self.frameAct.cbAcciones.get()
+        self.frameAct.setAccion(accionSel)
+        # print(accionSel)
+
+    def bindeos(self):
+        self.framePerf.cbPerf.bind("<<ComboboxSelected>>", self.cambioDePerfil)
+        self.frameBtn.lTeclaActiva.bind("<Configure>", self.cambioDeTecla)
+        self.frameAct.cbAcciones.bind("<<ComboboxSelected>>", self.cambioDeAccion)
+
+
+
+# root.mainloop()

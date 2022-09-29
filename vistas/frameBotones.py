@@ -69,8 +69,6 @@ class FBotones(Frame):
         btnL.grid(row=2,column=3,padx=10, pady=10)
         btnL.config(background=self.determinarColor(perfil, 'L'))
 
-
-
     def crearVentana(self):
         self.lTeclaActiva = ttk.Label(self, text="")
         self.lTeclaActiva.grid(row=1,column=1)
