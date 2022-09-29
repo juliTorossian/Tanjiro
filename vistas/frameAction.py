@@ -39,25 +39,26 @@ class FActions(Frame):
         print(accion)
 
         if (self.tecla != None and self.perfil != None):
-            if (accion.lower() != self.accionSelec):
-                if (self.fAccion != None):
-                    self.fAccion.destroy()
-                
-                if (accion.lower() == "escritura"):
-                    self.fAccion = fAccionEscritura(self, self.accParam)
-                    # self.fAccion.pack()
-                    self.fAccion.place(x=30, y=110, width=320, height=190)
-                    self.accionSelec = accion.lower()
-                elif (accion.lower() == "macro"):
-                    self.fAccion = fAccionMacro(self, self.accParam)
-                    # self.fAccion.pack()
-                    self.fAccion.place(x=30, y=110, width=320, height=190)
-                    self.accionSelec = accion.lower()
-                elif (accion.lower() == "sonido"):
-                    self.fAccion = fAccionSonido(self, self.accParam)
-                    # self.fAccion.pack()
-                    self.fAccion.place(x=30, y=110, width=320, height=190)
-                    self.accionSelec = accion.lower()
+            if (accion != None):
+                if (accion.lower() != self.accionSelec):
+                    if (self.fAccion != None):
+                        self.fAccion.destroy()
+                    
+                    if (accion.lower() == "escritura"):
+                        self.fAccion = fAccionEscritura(self, self.accParam)
+                        # self.fAccion.pack()
+                        self.fAccion.place(x=30, y=110, width=320, height=190)
+                        self.accionSelec = accion.lower()
+                    elif (accion.lower() == "macro"):
+                        self.fAccion = fAccionMacro(self, self.accParam)
+                        # self.fAccion.pack()
+                        self.fAccion.place(x=30, y=110, width=320, height=190)
+                        self.accionSelec = accion.lower()
+                    elif (accion.lower() == "sonido"):
+                        self.fAccion = fAccionSonido(self, self.accParam)
+                        # self.fAccion.pack()
+                        self.fAccion.place(x=30, y=110, width=320, height=190)
+                        self.accionSelec = accion.lower()
 
 
     def crearVentana(self):
@@ -80,7 +81,7 @@ class fAccionEscritura(Frame):
         self.master = master
         self.tecla  = master.tecla
         self.perfil = master.perfil
-        self.accion = "escritura"
+        self.accion = "escribir"
         self.param  = param
 
         self.crearVentana()

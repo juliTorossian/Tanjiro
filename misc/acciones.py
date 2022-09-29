@@ -1,11 +1,24 @@
+from re import sub
 from misc.perfiles import getComando
 from misc.param import getPerfilPre
 from funciones.teclas.teclado import ejecutarMacro, escribir
+from funciones.audio.volumen import subirVolumen, bajarVolumen
 
 perfilPredefinido = getPerfilPre()
+perfilActivo = ''
+
+def setPefil(perfilParam):
+    global perfilActivo
+    perfilActivo = perfilParam
+
+def getPerfilActivo():
+    global perfilActivo
+    return perfilActivo if len(perfilActivo) > 0 else perfilPredefinido
+
 
 def accionTecla(tecla):
-    comando, param = getComando(perfil=perfilPredefinido, tecla=tecla)
+    perfil = getPerfilActivo()
+    comando, param = getComando(perfil=perfil, tecla=tecla)
 
     print(comando)
     print(param)
@@ -21,8 +34,10 @@ def accionTecla(tecla):
 def accionEncoder(sentido):
     if sentido == 1:
         print("sube volumen")
+        subirVolumen(proceso="Spotify.exe", decibels=0.05)
     else:
         print("baja volumen")
+        bajarVolumen(proceso="Spotify.exe", decibels=0.05)
 
 def accionEncoderBtn():
     print("accion btn encoder solo")

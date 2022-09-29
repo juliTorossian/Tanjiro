@@ -1,21 +1,17 @@
 from vistaMain import VentanaMain
-import threading
-from tecladoEjecucion import escuchar, stop
+from tecladoEjecucion import ejecutar, stop, connOk
 
 
 ventana = VentanaMain()
 
 def seCierraLaVentana():
-    # print('stop 1')
     stop()
     ventana.ventana.destroy()
 
 def main():
-    connOk = False
 
-    th_test = threading.Thread(target=escuchar, args=())
-    th_test.start()
-
+    ejecutar()
+    print(connOk)
 
     ventana.ventana.protocol("WM_DELETE_WINDOW", seCierraLaVentana)
     ventana.ventana.mainloop()

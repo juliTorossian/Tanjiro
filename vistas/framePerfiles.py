@@ -32,6 +32,9 @@ class FPerfiles(Frame):
                 else:
                     messagebox.showerror("Error", "Ha ocurrido un erro al eliminar el perfil.")
 
+    def activarPerfil():
+        pass
+
     def nuevoPerfil(self):
         cantPerfiles = len(getPerfilesNombre())
         perfilNombre = self.cbPerf.get()
@@ -63,3 +66,6 @@ class FPerfiles(Frame):
 
         self.btnDPerf = ttk.Button(self, text='-', command=lambda: self.eliminarPerfil(self.cbPerf.get()))
         self.btnDPerf.place(x=310, y=30, width=40, height=30)
+
+        self.bActivarPerfil = ttk.Button(self, text='Activar')
+        self.bActivarPerfil.place(x=150, y=65, width=80, height=30)

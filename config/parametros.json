@@ -1,4 +1,1 @@
-{
-    "puerto":"",
-    "perfil":"PERFIL1"
-}
+{"puerto": "COM10", "perfil": "PERFIL1"}
