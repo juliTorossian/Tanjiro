@@ -6,25 +6,28 @@ puertoCOM = getCOMParam()
 stop = False
 
 def escuchar():
-    arduino = Arduino(puerto=puertoCOM)
+    global stop
+    try: 
+        arduino = Arduino(puerto=puertoCOM)
 
-    while(True):
-        print('0')
-        aux = arduino.leerSerial()
-        if aux != None:
-            print(aux)
-            print(aux['accion'])
-            if aux['accion'] == 'tecla':
-                accionTecla(aux['param1'])
-            elif aux['accion'] == 'encoderGiro':
-                accionEncoder(aux['param1'])
-            elif aux['accion'] == 'encoderBtn':
-                accionEncoderBtn(aux['param1'])
-            elif aux['accion'] == 'teclaEncoder':
-                cambioDePerfil(aux['param1'])
-        
-        if stop:
-            break
+        while(True):
+            aux = arduino.leerSerial()
+            if aux != None:
+                print(aux)
+                # print(aux['accion'])
+                if aux['accion'] == 'tecla':
+                    accionTecla(aux['param1'])
+                elif aux['accion'] == 'encoderGiro':
+                    accionEncoder(aux['param1'])
+                elif aux['accion'] == 'encoderBtn':
+                    accionEncoderBtn(aux['param1'])
+                elif aux['accion'] == 'teclaEncoder':
+                    cambioDePerfil(aux['param1'])
+            
+            if not stop:
+                break
+    except Exception as e:
+        print(e)
 
 def stop():
     global stop

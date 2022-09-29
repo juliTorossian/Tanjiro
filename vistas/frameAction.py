@@ -16,6 +16,7 @@ class FActions(Frame):
         self.tecla       = None
         self.fAccion     = None
         self.accionSelec = None
+        self.accParam    = ''
 
         self.crearVentana()
 
@@ -30,29 +31,33 @@ class FActions(Frame):
     def setBtn(self, tecla):
         self.tecla = tecla
         self.lTecla.config(text="Tecla: {}".format(self.tecla))
+    def setAccParam(self, param):
+        self.accParam = param
+        print(self.accParam)
 
     def setAccion(self, accion):
+        print(accion)
 
         if (self.tecla != None and self.perfil != None):
-            if (accion != self.accionSelec):
+            if (accion.lower() != self.accionSelec):
                 if (self.fAccion != None):
                     self.fAccion.destroy()
                 
-                if (accion == "Escritura"):
-                    self.fAccion = fAccionEscritura(self)
+                if (accion.lower() == "escritura"):
+                    self.fAccion = fAccionEscritura(self, self.accParam)
                     # self.fAccion.pack()
                     self.fAccion.place(x=30, y=110, width=320, height=190)
-                    self.accionSelec = accion
-                elif (accion == "Macro"):
-                    self.fAccion = fAccionMacro(self)
+                    self.accionSelec = accion.lower()
+                elif (accion.lower() == "macro"):
+                    self.fAccion = fAccionMacro(self, self.accParam)
                     # self.fAccion.pack()
                     self.fAccion.place(x=30, y=110, width=320, height=190)
-                    self.accionSelec = accion
-                elif (accion == 'Sonido'):
-                    self.fAccion = fAccionSonido(self)
+                    self.accionSelec = accion.lower()
+                elif (accion.lower() == "sonido"):
+                    self.fAccion = fAccionSonido(self, self.accParam)
                     # self.fAccion.pack()
                     self.fAccion.place(x=30, y=110, width=320, height=190)
-                    self.accionSelec = accion
+                    self.accionSelec = accion.lower()
 
 
     def crearVentana(self):
@@ -70,12 +75,13 @@ class FActions(Frame):
         
 class fAccionEscritura(Frame):
     
-    def __init__(self, master):
+    def __init__(self, master, param):
         super().__init__(master)
         self.master = master
         self.tecla  = master.tecla
         self.perfil = master.perfil
         self.accion = "escritura"
+        self.param  = param
 
         self.crearVentana()
 
@@ -91,7 +97,7 @@ class fAccionEscritura(Frame):
         accion["comando"] = self.accion
         accion["parametro"] = self.eTexto.get()
 
-        if not teclaConComando:
+        if not teclaConComando(self.perfil, self.tecla):
             setComando(self.perfil, accion, False)
         else:
             respuesta=messagebox.askyesno("Tecla con comando", "Esta tecla ya tiene un comando asociado, desea remplazarlo?")
@@ -105,7 +111,7 @@ class fAccionEscritura(Frame):
         lAccion = ttk.Label(self, justify="center")
         lAccion.config(text="Ingrese el texto que quiere que se escriba:")
         lAccion.pack()
-        self.eTexto = ttk.Entry(self)
+        self.eTexto = ttk.Entry(self, textvariable=self.param)
         self.eTexto.pack()
 
         self.bGuardar = ttk.Button(self, text="Guardar", command=self.guardarAccion)
@@ -113,13 +119,14 @@ class fAccionEscritura(Frame):
 
 class fAccionMacro(Frame):
     
-    def __init__(self, master):
+    def __init__(self, master, param):
         super().__init__(master)
         self.master = master
         self.tecla  = master.tecla
         self.perfil = master.perfil
         self.accion = "macro"
         self.macro  = None
+        self.param  = param
 
         self.crearVentana()
 
@@ -133,9 +140,9 @@ class fAccionMacro(Frame):
         # accion = '"tecla":"{0}","comando":"{1}","parametro":"{2}"'.format(self.tecla, self.accion, self.eTexto.get())
         accion["tecla"] = self.tecla
         accion["comando"] = self.accion
-        accion["parametro"] = self.eTexto.get()
+        accion["parametro"] = self.eTexto['text']
 
-        if not teclaConComando:
+        if not teclaConComando(self.perfil, self.tecla):
             setComando(self.perfil, accion, False)
         else:
             respuesta=messagebox.askyesno("Tecla con comando", "Esta tecla ya tiene un comando asociado, desea remplazarlo?")
@@ -155,7 +162,7 @@ class fAccionMacro(Frame):
         lAccion = ttk.Label(self, justify="center")
         lAccion.config(text="Ingrese la macro:")
         lAccion.pack()
-        self.eTexto = ttk.Label(self, justify="center")
+        self.eTexto = ttk.Label(self, justify="center", text=self.param)
         self.eTexto.pack()
         self.bGuardar = ttk.Button(self, text="Grabar Macro", command=self.grabarMacro)
         self.bGuardar.pack()
@@ -165,13 +172,14 @@ class fAccionMacro(Frame):
 
 class fAccionSonido(Frame):
     
-    def __init__(self, master):
+    def __init__(self, master, param):
         super().__init__(master)
         self.master = master
         self.tecla  = master.tecla
         self.perfil = master.perfil
         self.accion = "sonido"
         self.archivo = None
+        self.param  = param
 
         self.crearVentana()
 
@@ -187,7 +195,7 @@ class fAccionSonido(Frame):
         accion["comando"] = self.accion
         accion["parametro"] = self.archivo
 
-        if not teclaConComando:
+        if not teclaConComando(self.perfil, self.tecla):
             setComando(self.perfil, accion, False)
         else:
             respuesta=messagebox.askyesno("Tecla con comando", "Esta tecla ya tiene un comando asociado, desea remplazarlo?")
@@ -212,7 +220,7 @@ class fAccionSonido(Frame):
         lAccion = ttk.Label(self, justify="center")
         lAccion.config(text="Seleccione el archivo de audio:")
         lAccion.pack()
-        self.eTexto = ttk.Label(self, justify="center")
+        self.eTexto = ttk.Label(self, justify="center", text=self.param)
         self.eTexto.pack()
         bSelArch = ttk.Button(self, text="Buscar Archivo", command=self.buscarArchivo)
         bSelArch.pack()

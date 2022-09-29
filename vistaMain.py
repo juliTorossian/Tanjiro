@@ -1,10 +1,9 @@
-import tkinter as tk
-from tkinter import Tk, messagebox, ttk, Frame
-from funciones.teclas.teclado import grabarMacro, ejecutarMacro
+from tkinter import Tk
 from vistas.frameConn import FConn
 from vistas.framePerfiles import FPerfiles
 from vistas.frameBotones import FBotones
 from vistas.frameAction import FActions
+from misc.perfiles import getComando
 
 class VentanaMain():
     
@@ -24,7 +23,6 @@ class VentanaMain():
 
         self.crearVentanas()
         self.bindeos()
-
 
     def crearVentanas(self):
         # Frame de conneccion
@@ -49,14 +47,20 @@ class VentanaMain():
 
 
     def cambioDePerfil(self, event):
-        perfilActivo = self.framePerf.cbPerf.get()
-        self.frameBtn.setBotones(perfilActivo)
-        self.frameAct.setPerfil(perfilActivo)
+        self.perfilActivo = self.framePerf.cbPerf.get()
+        self.frameBtn.setBotones(self.perfilActivo)
+        self.frameAct.setPerfil(self.perfilActivo)
         # print(perfilActivo)
 
     def cambioDeTecla(self, event):
-        teclaActiva = self.frameBtn.teclaActiva
-        self.frameAct.setBtn(teclaActiva)
+        self.teclaActiva = self.frameBtn.teclaActiva
+        self.frameAct.setBtn(self.teclaActiva)
+
+        comando, param = getComando(self.perfilActivo, self.teclaActiva)
+
+        self.frameAct.setAccParam(param)
+        self.frameAct.setAccion(comando)
+
         # print(teclaActiva)
 
     def cambioDeAccion(self, event):

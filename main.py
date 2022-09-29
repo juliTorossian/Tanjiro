@@ -11,9 +11,11 @@ def seCierraLaVentana():
     ventana.ventana.destroy()
 
 def main():
+    connOk = False
 
     th_test = threading.Thread(target=escuchar, args=())
     th_test.start()
+
 
     ventana.ventana.protocol("WM_DELETE_WINDOW", seCierraLaVentana)
     ventana.ventana.mainloop()

@@ -31,7 +31,6 @@ class Arduino:
         # print(comm)
         commJson = json.loads(comm)
         print(commJson)
-        print(commJson['p'])
         if ((commJson["r"] != -1) and (commJson["e"] == 0)):
             #! Pulsacion de un boton SOLO
             # print(commJson["r"])

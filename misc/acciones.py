@@ -4,7 +4,7 @@ from funciones.teclas.teclado import ejecutarMacro, escribir
 
 perfilPredefinido = getPerfilPre()
 
-async def accionTecla(tecla):
+def accionTecla(tecla):
     comando, param = getComando(perfil=perfilPredefinido, tecla=tecla)
 
     print(comando)
@@ -18,16 +18,16 @@ async def accionTecla(tecla):
         # reproducir(param)
         pass
 
-async def accionEncoder(sentido):
+def accionEncoder(sentido):
     if sentido == 1:
         print("sube volumen")
     else:
         print("baja volumen")
 
-async def accionEncoderBtn():
+def accionEncoderBtn():
     print("accion btn encoder solo")
 
-async def cambioDePerfil(tecla):
+def cambioDePerfil(tecla):
     global teclado
     perfil = tecla
     print(f"Cambio al perfil {perfil}")
